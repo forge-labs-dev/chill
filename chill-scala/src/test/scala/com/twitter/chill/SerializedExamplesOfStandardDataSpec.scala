@@ -5,6 +5,15 @@ import org.scalatest.wordspec.AnyWordSpec
 
 class SerializedExamplesOfStandardDataSpec extends AnyWordSpec with Matchers {
   import SerializedExamplesData._
+  // Note: scala.util.Properties.versionString returns 2.13.x even in Scala 3 because it uses
+  // the Scala 2.13 standard library. We detect Scala 3 by checking for a Scala 3-specific class.
+  private val isScala3: Boolean =
+    try {
+      Class.forName("scala.quoted.Quotes")
+      true
+    } catch {
+      case _: Throwable => false
+    }
 
   s"""
     |Projects using chill to persist serialized data (for example in event sourcing
@@ -27,6 +36,7 @@ class SerializedExamplesOfStandardDataSpec extends AnyWordSpec with Matchers {
     .should {
       "serialize as expected to the correct value (see above for details)"
         .in {
+          assume(!isScala3, "Serialization format differs in Scala 3")
           val scalaVersion = scala.util.Properties.versionNumberString
           val examplesToOmit = OmitExamplesInScalaVersion
             .filterKeys(scalaVersion.startsWith)

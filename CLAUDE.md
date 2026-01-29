@@ -80,6 +80,21 @@ new ScalaKryoInstantiator()
 - Version-specific source directories: `src/main/scala-2.12-/` and `src/main/scala-2.13+/`
 - Binary compatibility maintained with version 0.10.0 via MIMA
 
+## Local Development Environment
+
+This project requires Java 17+. On macOS with Homebrew:
+
+```bash
+# Install openjdk@21 (installed at /opt/homebrew/Cellar/openjdk@21/21.0.10)
+brew install openjdk@21
+
+# Set JAVA_HOME for current session
+export JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home
+
+# Or symlink to system Java directory (requires sudo)
+sudo ln -sfn /opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+```
+
 ## Code Style
 
 - Scalafmt with 110 character max line width

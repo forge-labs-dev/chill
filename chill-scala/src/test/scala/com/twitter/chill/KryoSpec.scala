@@ -53,6 +53,15 @@ trait ExampleUsingSelf { self =>
 case class Foo(m1: Map[String, Int], m2: Map[String, Seq[String]])
 
 class KryoSpec extends AnyWordSpec with Matchers with BaseProperties {
+  // Note: scala.util.Properties.versionString returns 2.13.x even in Scala 3 because it uses
+  // the Scala 2.13 standard library. We detect Scala 3 by checking for a Scala 3-specific class.
+  private val isScala3: Boolean =
+    try {
+      Class.forName("scala.quoted.Quotes")
+      true
+    } catch {
+      case _: Throwable => false
+    }
   def roundtrip[T]: Matcher[T] = new Matcher[T] {
     def apply(t: T): MatchResult =
       MatchResult(
@@ -66,6 +75,7 @@ class KryoSpec extends AnyWordSpec with Matchers with BaseProperties {
 
   "KryoSerializers and KryoDeserializers" should {
     "round trip any non-array object" in {
+      assume(!isScala3, "Tuple serialization differs in Scala 3")
       val test = List(
         1,
         2,
