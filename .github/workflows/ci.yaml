@@ -61,5 +61,5 @@ jobs:
           distribution: "temurin"
           java-version: "17"
       - uses: sbt/setup-sbt@v1
-      - run: sbt "++2.12.21" coverage clean test coverageReport
+      - run: sbt "++2.13.18" coverage clean test coverageReport
       - run: bash <(curl -s https://codecov.io/bash)
