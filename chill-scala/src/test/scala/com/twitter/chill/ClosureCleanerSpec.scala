@@ -31,6 +31,17 @@ object ClosureCleanerSpec {
   // invokeDynamic and the use of LambdaMetaFactory.
   val supportsSerializedLambda: Boolean =
     List("2.12", "2.13").exists(scala.util.Properties.versionString.contains)
+
+  // Scala 3 has different closure representation - some closure cleaner tests don't apply
+  // Note: scala.util.Properties.versionString returns 2.13.x even in Scala 3 because it uses
+  // the Scala 2.13 standard library. We detect Scala 3 by checking for a Scala 3-specific class.
+  val isScala3: Boolean =
+    try {
+      Class.forName("scala.quoted.Quotes")
+      true
+    } catch {
+      case _: Throwable => false
+    }
 }
 
 class ClosureCleanerSpec extends AnyWordSpec with Matchers {
@@ -77,6 +88,7 @@ class ClosureCleanerSpec extends AnyWordSpec with Matchers {
     }
 
     "clean functions in traits" in {
+      assume(!ClosureCleanerSpec.isScala3, "Closure cleaning works differently in Scala 3")
       // not serializable; AwesomeFn2 needs to extend Serializable
       val fn = BaseFns2.timesByMult
       serializableFn(fn, before = false, after = false)
@@ -155,6 +167,7 @@ class ClosureCleanerSpec extends AnyWordSpec with Matchers {
 
     "clean complex nested closures (LMF)" in {
       assume(ClosureCleanerSpec.supportsSerializedLambda)
+      assume(!ClosureCleanerSpec.isScala3, "Closure cleaner works differently in Scala 3")
 
       serializableFn(new NestedClosuresNotSerializable().getMapFn, before = true, after = true)
 
@@ -183,7 +196,7 @@ class ClosureCleanerSpec extends AnyWordSpec with Matchers {
     assert(isSerializable(fn0) == before, "serializable before")
     val clean = ClosureCleaner.clean(fn)
     assert(isSerializable(clean) == after, "serializable after")
-    forAll { a: A => assert(clean(a) == fn0(a)) }
+    forAll((a: A) => assert(clean(a) == fn0(a)))
   }
 }
 
@@ -193,7 +206,7 @@ class NestedClosuresNotSerializable {
   def getMapFn: Int => Int = closure("one") {
     def x = irrelevantInt // scalafix:ok
     def y = 2
-    val fn = { a: Int => a + y }
+    val fn = { (a: Int) => a + y }
     fn
   }
 }
@@ -206,7 +219,7 @@ object TestObject {
   val boom: NotSerializable = new NotSerializable {}
 
   // we really need outer because we access this.bar
-  val fn: Int => Int = { x: Int => bar() + x }
+  val fn: Int => Int = { (x: Int) => bar() + x }
 }
 
 class TestClass extends Serializable {
