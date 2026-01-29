@@ -78,7 +78,7 @@ new ScalaKryoInstantiator()
 - **Scala versions**: 2.12.21, 2.13.18
 - **Java versions**: 17, 21
 - Version-specific source directories: `src/main/scala-2.12-/` and `src/main/scala-2.13+/`
-- Binary compatibility maintained with version 0.9.5 via MIMA
+- Binary compatibility maintained with version 0.10.0 via MIMA
 
 ## Code Style
 
