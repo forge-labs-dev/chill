@@ -24,12 +24,11 @@ class NotSerializable {
   val x = "abcd"
   override def equals(other: Any): Boolean =
     other match {
-      case i: NotSerializable => true
+      case _: NotSerializable => true
       case _                  => false
     }
 }
 class ExternalizerCodecSpec extends AnyWordSpec {
-  import ExternalizerCodec._
   import ExternalizerInjection._
 
   def rt[T: ExternalizerInjection: ExternalizerCodec](t: T): Try[T] = {
