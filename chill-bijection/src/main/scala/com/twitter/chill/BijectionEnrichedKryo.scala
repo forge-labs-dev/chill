@@ -16,7 +16,6 @@ limitations under the License.
 
 package com.twitter.chill
 
-import com.twitter.bijection.Injection
 import com.twitter.bijection.{Bijection, Bufferable, ImplicitBijection, Injection}
 
 import scala.reflect.ClassTag

@@ -43,7 +43,7 @@ class BitSetSerializer extends KSerializer[BitSet] {
     } else {
       var sum = 0
       val bits = new Array[Long](i.readInt(true) / 64 + 1)
-      (0 until size).foreach { step =>
+      (0 until size).foreach { _ =>
         sum += i.readInt(true)
         bits(sum / 64) |= 1L << (sum % 64)
       }

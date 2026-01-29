@@ -41,7 +41,7 @@ private object JavaIterableWrapperSerializer {
   private val underlyingMethodOpt =
     try Some(wrapperClass.getDeclaredMethod("underlying"))
     catch {
-      case e: Exception =>
+      case _: Exception =>
         None
     }
 }
