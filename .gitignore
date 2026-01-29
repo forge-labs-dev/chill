@@ -21,7 +21,7 @@ sonatype.sbt
 /bin/
 /sandbox/
 
-# eclipse, intellij
+# eclipse, intellij, vscode, metals
 /.classpath
 /.project
 /src/intellij/*.iml
@@ -31,6 +31,10 @@ sonatype.sbt
 /.idea
 /.idea_modules
 /.settings
+/.vscode
+/.metals
+/.bloop
+metals.sbt
 
 # bak files produced by ./cleanup-commit
 *.bak

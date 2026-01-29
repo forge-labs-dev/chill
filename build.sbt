@@ -19,40 +19,27 @@ def scalaVersionSpecificFolders(srcBaseDir: java.io.File, scalaVersion: String):
 
 val sharedSettings = Seq(
   organization := "com.twitter",
-  scalaVersion := "2.11.12",
-  crossScalaVersions := Seq("2.11.12", "2.12.17", "2.13.8"),
-  scalacOptions ++= Seq("-unchecked", "-deprecation"),
-  scalacOptions ++= {
-    scalaVersion.value match {
-      case v if v.startsWith("2.11") => Seq("-Ywarn-unused", "-Ywarn-unused-import", "-target:jvm-1.8")
-      case _                         => Seq("-Ywarn-unused", "-release", "8")
-    }
-  },
-  // Twitter Hadoop needs this, sorry 1.7 fans
-  javacOptions ++= Seq("-target", "1.8", "-source", "1.8", "-Xlint:-options"),
+  scalaVersion := "2.13.18",
+  crossScalaVersions := Seq("2.12.21", "2.13.18"),
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-Ywarn-unused", "-release", "17"),
+  javacOptions ++= Seq("-source", "17", "-target", "17"),
   Test / fork := true,
-  Test / javaOptions ++= {
-    sys.props("java.version") match {
-      case v if v.startsWith("17") =>
-        Seq(
-          "--add-opens",
-          "java.base/java.util=ALL-UNNAMED",
-          "--add-opens",
-          "java.base/java.lang.invoke=ALL-UNNAMED"
-        )
-      case _ => Seq.empty
-    }
-  },
-  doc / javacOptions := Seq("-source", "1.8"),
+  Test / javaOptions ++= Seq(
+    "--add-opens",
+    "java.base/java.util=ALL-UNNAMED",
+    "--add-opens",
+    "java.base/java.lang.invoke=ALL-UNNAMED"
+  ),
+  doc / javacOptions := Seq("-source", "17"),
   resolvers ++= Seq(
-    Opts.resolver.sonatypeSnapshots,
-    Opts.resolver.sonatypeReleases,
+    Opts.resolver.sonatypeOssSnapshots,
+    Opts.resolver.sonatypeOssReleases,
     "clojars".at("https://clojars.org/repo")
   ),
   libraryDependencies ++= Seq(
-    "org.scalacheck" %% "scalacheck" % "1.15.2" % "test",
-    "org.scalatest" %% "scalatest" % "3.2.15" % "test",
-    "org.scalatestplus" %% "scalatestplus-scalacheck" % "3.1.0.0-RC2" % "test",
+    "org.scalacheck" %% "scalacheck" % "1.19.0" % "test",
+    "org.scalatest" %% "scalatest" % "3.2.19" % "test",
+    "org.scalatestplus" %% "scalacheck-1-18" % "3.2.19.0" % "test",
     "com.esotericsoftware" % "kryo-shaded" % kryoVersion
   ),
   Test / parallelExecution := true,
@@ -165,10 +152,7 @@ def module(name: String) = {
     .settings(
       Keys.name := id,
       mimaPreviousArtifacts := youngestForwardCompatible(name).toSet,
-      mimaBinaryIssueFilters ++= ignoredABIProblems,
-      // Disable cross publishing for java artifacts
-      publishArtifact :=
-        (if (javaOnly.contains(name) && scalaVersion.value.startsWith("2.11")) false else true)
+      mimaBinaryIssueFilters ++= ignoredABIProblems
     )
 }
 
@@ -187,10 +171,7 @@ lazy val chill = Project(
   .dependsOn(chillJava)
 
 def akka(scalaVersion: String) =
-  (scalaVersion match {
-    case s if s.startsWith("2.11.") => "com.typesafe.akka" %% "akka-actor" % "2.5.32"
-    case _                          => "com.typesafe.akka" %% "akka-actor" % akkaVersion
-  }) % "provided"
+  ("com.typesafe.akka" %% "akka-actor" % akkaVersion) % "provided"
 
 lazy val chillAkka = module("akka")
   .settings(
