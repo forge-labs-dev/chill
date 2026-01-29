@@ -14,14 +14,29 @@ def scalaVersionSpecificFolders(srcBaseDir: java.io.File, scalaVersion: String):
       new java.io.File(s"${srcBaseDir.getPath}-2.12-") :: Nil
     case Some((2, y)) if y >= 13 =>
       new java.io.File(s"${srcBaseDir.getPath}-2.13+") :: Nil
+    case Some((3, _)) =>
+      // Scala 3 uses the same collection APIs as Scala 2.13
+      new java.io.File(s"${srcBaseDir.getPath}-2.13+") :: Nil
     case _ => Nil
   }
 
+val scala212 = "2.12.21"
+val scala213 = "2.13.18"
+val scala3 = "3.3.4"
+val scala2Versions = Seq(scala212, scala213)
+val allScalaVersions = scala2Versions :+ scala3
+
 val sharedSettings = Seq(
   organization := "com.twitter",
-  scalaVersion := "2.13.18",
-  crossScalaVersions := Seq("2.12.21", "2.13.18"),
-  scalacOptions ++= Seq("-unchecked", "-deprecation", "-Ywarn-unused", "-release", "17"),
+  scalaVersion := scala213,
+  crossScalaVersions := allScalaVersions,
+  scalacOptions ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, _)) => Seq("-unchecked", "-deprecation", "-Ywarn-unused", "-release", "17")
+      case Some((3, _)) => Seq("-unchecked", "-deprecation", "-Wunused:all", "-release", "17")
+      case _            => Seq()
+    }
+  },
   javacOptions ++= Seq("-source", "17", "-target", "17"),
   Test / fork := true,
   Test / javaOptions ++= Seq(
@@ -171,8 +186,10 @@ lazy val chill = Project(
 def akka(scalaVersion: String) =
   ("com.typesafe.akka" %% "akka-actor" % akkaVersion) % "provided"
 
+// Akka 2.6 only supports Scala 2.x
 lazy val chillAkka = module("akka")
   .settings(
+    crossScalaVersions := scala2Versions,
     resolvers += Resolver.typesafeRepo("releases"),
     libraryDependencies ++= Seq(
       "com.typesafe" % "config" % "1.4.2",
@@ -181,8 +198,10 @@ lazy val chillAkka = module("akka")
   )
   .dependsOn(chill % "test->test;compile->compile")
 
+// Bijection only supports Scala 2.x
 lazy val chillBijection = module("bijection")
   .settings(
+    crossScalaVersions := scala2Versions,
     libraryDependencies ++= Seq(
       "com.twitter" %% "bijection-core" % bijectionVersion
     )
@@ -226,8 +245,10 @@ lazy val chillThrift = module("thrift").settings(
   )
 )
 
+// Scrooge only supports Scala 2.x
 lazy val chillScrooge = module("scrooge")
   .settings(
+    crossScalaVersions := scala2Versions,
     libraryDependencies ++= Seq(
       ("org.apache.thrift" % "libthrift" % "0.17.0").exclude("junit", "junit"),
       "com.twitter" %% "scrooge-serializer" % scroogeVersion
@@ -247,8 +268,10 @@ lazy val chillProtobuf = module("protobuf")
   )
   .dependsOn(chillJava)
 
+// Avro depends on bijection which only supports Scala 2.x
 lazy val chillAvro = module("avro")
   .settings(
+    crossScalaVersions := scala2Versions,
     libraryDependencies ++= Seq(
       "com.twitter" %% "bijection-avro" % bijectionVersion,
       "junit" % "junit" % "4.13.2" % "test"
@@ -256,8 +279,10 @@ lazy val chillAvro = module("avro")
   )
   .dependsOn(chill, chillJava, chillBijection)
 
+// Algebird only supports Scala 2.x
 lazy val chillAlgebird = module("algebird")
   .settings(
+    crossScalaVersions := scala2Versions,
     libraryDependencies ++= Seq(
       "com.twitter" %% "algebird-core" % algebirdVersion
     )

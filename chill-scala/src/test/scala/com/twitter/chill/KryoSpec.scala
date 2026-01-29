@@ -82,7 +82,7 @@ class KryoSpec extends AnyWordSpec with Matchers with BaseProperties {
         Left(Map(1 -> "YO!")),
         Some(Left(10)),
         Map("good" -> 0.5, "bad" -> -1.0),
-        Map('a -> 'a, 'b -> 'b, 'c -> 'c, 'd -> 'd, 'e -> 'e),
+        Map("a" -> "a", "b" -> "b", "c" -> "c", "d" -> "d", "e" -> "e"),
         MArrayBuffer(1, 2, 3, 4, 5),
         List(Some(MHashMap(1 -> 1, 2 -> 2)), None, Some(MHashMap(3 -> 4))),
         Set(1, 2, 3, 4, 10),
@@ -90,9 +90,9 @@ class KryoSpec extends AnyWordSpec with Matchers with BaseProperties {
         SortedSet[Long](),
         SortedSet(1L, 2L, 3L, 4L),
         BitSet(),
-        BitSet((0 until 1000).map { x: Int => x * x }: _*),
+        BitSet((0 until 1000).map { (x: Int) => x * x }: _*),
         MBitSet(),
-        MBitSet((0 until 1000).map { x: Int => x * x }: _*),
+        MBitSet((0 until 1000).map { (x: Int) => x * x }: _*),
         SortedMap[Long, String](),
         SortedMap("b" -> 2, "a" -> 1),
         ListMap("good" -> 0.5, "bad" -> -1.0),
@@ -112,7 +112,7 @@ class KryoSpec extends AnyWordSpec with Matchers with BaseProperties {
         new _root_.java.util.ArrayList(Seq(1, 2, 3).asJava).asScala,
         new _root_.java.util.HashMap[Int, Int](Map(1 -> 2, 3 -> 4).asJava).asScala,
         (),
-        'hai,
+        Symbol("hai"),
         BigDecimal(1000.24)
       ).asInstanceOf[List[AnyRef]]
 
@@ -227,11 +227,11 @@ class KryoSpec extends AnyWordSpec with Matchers with BaseProperties {
         kryo.setRegistrationRequired(true)
         kryo
       }
-      val m1 = Map('a -> 'a)
-      val m2 = Map('a -> 'a, 'b -> 'b)
-      val m3 = Map('a -> 'a, 'b -> 'b, 'c -> 'c)
-      val m4 = Map('a -> 'a, 'b -> 'b, 'c -> 'c, 'd -> 'd)
-      val m5 = Map('a -> 'a, 'b -> 'b, 'c -> 'c, 'd -> 'd, 'e -> 'e)
+      val m1 = Map("a" -> "a")
+      val m2 = Map("a" -> "a", "b" -> "b")
+      val m3 = Map("a" -> "a", "b" -> "b", "c" -> "c")
+      val m4 = Map("a" -> "a", "b" -> "b", "c" -> "c", "d" -> "d")
+      val m5 = Map("a" -> "a", "b" -> "b", "c" -> "c", "d" -> "d", "e" -> "e")
       Seq(m1, m2, m3, m4, m5).foreach(rtEquiv(inst, _) should equal(true))
     }
     "handle small immutable sets when registration is required" in {
@@ -240,11 +240,11 @@ class KryoSpec extends AnyWordSpec with Matchers with BaseProperties {
         kryo.setRegistrationRequired(true)
         kryo
       }
-      val s1 = Set('a)
-      val s2 = Set('a, 'b)
-      val s3 = Set('a, 'b, 'c)
-      val s4 = Set('a, 'b, 'c, 'd)
-      val s5 = Set('a, 'b, 'c, 'd, 'e)
+      val s1 = Set("a")
+      val s2 = Set("a", "b")
+      val s3 = Set("a", "b", "c")
+      val s4 = Set("a", "b", "c", "d")
+      val s5 = Set("a", "b", "c", "d", "e")
       Seq(s1, s2, s3, s4, s5).foreach(rtEquiv(inst, _) should equal(true))
     }
     "handle nested mutable maps" in {

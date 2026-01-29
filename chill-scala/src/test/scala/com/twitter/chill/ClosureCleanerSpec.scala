@@ -183,7 +183,7 @@ class ClosureCleanerSpec extends AnyWordSpec with Matchers {
     assert(isSerializable(fn0) == before, "serializable before")
     val clean = ClosureCleaner.clean(fn)
     assert(isSerializable(clean) == after, "serializable after")
-    forAll { a: A => assert(clean(a) == fn0(a)) }
+    forAll { (a: A) => assert(clean(a) == fn0(a)) }
   }
 }
 
@@ -193,7 +193,7 @@ class NestedClosuresNotSerializable {
   def getMapFn: Int => Int = closure("one") {
     def x = irrelevantInt // scalafix:ok
     def y = 2
-    val fn = { a: Int => a + y }
+    val fn = { (a: Int) => a + y }
     fn
   }
 }
@@ -206,7 +206,7 @@ object TestObject {
   val boom: NotSerializable = new NotSerializable {}
 
   // we really need outer because we access this.bar
-  val fn: Int => Int = { x: Int => bar() + x }
+  val fn: Int => Int = { (x: Int) => bar() + x }
 }
 
 class TestClass extends Serializable {

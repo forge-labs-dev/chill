@@ -132,7 +132,7 @@ class StandardDataRegistrationsSpec extends AnyWordSpec with Matchers {
       }
       "serialize the options" in { roundtrip(None, Some(1), Option.empty[Int], Option(3)) }
       "serialize the eithers" in { roundtrip(Left(2), Right(4), Left.apply[Int, Int](3)) }
-      "serialize the empty array" in { roundtrip(Array()) }
+      "serialize the empty array" in { roundtrip(Array.empty[Int]) }
       "serialize empty Int arrays" in { roundtrip(Array.empty[Int]) }
       "serialize Int arrays" in { roundtrip(Array(4, 2)) }
       "serialize empty Short arrays" in { roundtrip(Array.empty[Short]) }
