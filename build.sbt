@@ -31,9 +31,7 @@ val sharedSettings = Seq(
     "java.base/java.lang.invoke=ALL-UNNAMED"
   ),
   doc / javacOptions := Seq("-source", "17"),
-  resolvers ++= Seq(
-    Opts.resolver.sonatypeOssSnapshots,
-    Opts.resolver.sonatypeOssReleases,
+  resolvers ++= Resolver.sonatypeOssRepos("snapshots") ++ Resolver.sonatypeOssRepos("releases") ++ Seq(
     "clojars".at("https://clojars.org/repo")
   ),
   libraryDependencies ++= Seq(
