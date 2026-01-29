@@ -92,7 +92,7 @@ class ClosureCleanerSpec extends AnyWordSpec with Matchers {
         Option(j).map(x => x + someSerializableMethod())
       }
       val closure3 = (m: Int) => {
-        Option(m).foreach(x => Option(x).foreach(y => Option(y).foreach(z => someSerializableValue)))
+        Option(m).foreach(x => Option(x).foreach(y => Option(y).foreach(_ => someSerializableValue)))
       }
 
       serializableFn(closure1, before = false, after = true)
@@ -110,7 +110,7 @@ class ClosureCleanerSpec extends AnyWordSpec with Matchers {
         Option(j).map(x => x + someSerializableMethod())
       }
       val closure3 = (m: Int) => {
-        Option(m).foreach(x => Option(x).foreach(y => Option(y).foreach(z => someSerializableValue)))
+        Option(m).foreach(x => Option(x).foreach(y => Option(y).foreach(_ => someSerializableValue)))
       }
 
       serializableFn(closure1, before = false, after = false)

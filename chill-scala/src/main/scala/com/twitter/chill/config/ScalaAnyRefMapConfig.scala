@@ -34,7 +34,7 @@ class ScalaAnyRefMapConfig(in: Map[AnyRef, AnyRef]) extends Config {
   override def get(k: String): String = conf.get(k).map(_.toString).getOrElse(null)
   override def set(k: String, v: String): Unit =
     Option(v) match {
-      case Some(r) => conf += k -> v
+      case Some(_) => conf += k -> v
       case None    => conf -= k
     }
 }
