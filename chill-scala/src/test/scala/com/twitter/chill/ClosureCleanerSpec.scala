@@ -183,7 +183,7 @@ class ClosureCleanerSpec extends AnyWordSpec with Matchers {
     assert(isSerializable(fn0) == before, "serializable before")
     val clean = ClosureCleaner.clean(fn)
     assert(isSerializable(clean) == after, "serializable after")
-    forAll { (a: A) => assert(clean(a) == fn0(a)) }
+    forAll((a: A) => assert(clean(a) == fn0(a)))
   }
 }
 
