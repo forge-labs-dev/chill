@@ -59,11 +59,10 @@ public class ReflectingInstantiator extends KryoInstantiator {
       // Make sure we can make a newKryo, this throws a runtime exception if not.
       newKryoWithEx();
     }
-    catch(ClassNotFoundException x) { throw new ConfigurationException(x); }
-    catch(InstantiationException x) { throw new ConfigurationException(x); }
-    catch(IllegalAccessException x) { throw new ConfigurationException(x); }
-    catch(NoSuchMethodException x) { throw new ConfigurationException(x); }
-    catch(java.lang.reflect.InvocationTargetException x) { throw new ConfigurationException(x); }
+    catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+           NoSuchMethodException | InvocationTargetException x) {
+      throw new ConfigurationException(x);
+    }
   }
 
   /** Create an instance using the defaults for non-listed params */
@@ -92,12 +91,12 @@ public class ReflectingInstantiator extends KryoInstantiator {
     this.regRequired = regRequired;
     this.skipMissing = skipMissing;
 
-    this.registrations = new ArrayList<IKryoRegistrar>();
-    for(IKryoRegistrar cr: classRegistrations) { this.registrations.add(cr); }
-    for(IKryoRegistrar rr: registrations) { this.registrations.add(rr); }
+    this.registrations = new ArrayList<>();
+    for (IKryoRegistrar cr : classRegistrations) { this.registrations.add(cr); }
+    for (IKryoRegistrar rr : registrations) { this.registrations.add(rr); }
 
-    defaultRegistrations = new ArrayList<ReflectingDefaultRegistrar>();
-    for(ReflectingDefaultRegistrar rdr: defaults) { defaultRegistrations.add(rdr); }
+    defaultRegistrations = new ArrayList<>();
+    for (ReflectingDefaultRegistrar rdr : defaults) { defaultRegistrations.add(rdr); }
   }
 
   public void set(Config conf) throws ConfigurationException {
@@ -131,10 +130,10 @@ public class ReflectingInstantiator extends KryoInstantiator {
     try {
       return newKryoWithEx();
     }
-    catch(InstantiationException x) { throw new RuntimeException(x); }
-    catch(IllegalAccessException x) { throw new RuntimeException(x); }
-    catch(NoSuchMethodException x) { throw new RuntimeException(x); }
-    catch(java.lang.reflect.InvocationTargetException x) { throw new RuntimeException(x); }
+    catch (InstantiationException | IllegalAccessException |
+           NoSuchMethodException | InvocationTargetException x) {
+      throw new RuntimeException(x);
+    }
   }
 
   /** All keys are prefixed with this string */
@@ -192,7 +191,7 @@ public class ReflectingInstantiator extends KryoInstantiator {
 
   protected List<? extends IKryoRegistrar> buildRegistrars(String base, boolean isAddDefault)
     throws ConfigurationException {
-      List<IKryoRegistrar> builder = new ArrayList<IKryoRegistrar>();
+      List<IKryoRegistrar> builder = new ArrayList<>();
 
       if (base == null)
           return builder;
@@ -240,19 +239,13 @@ public class ReflectingInstantiator extends KryoInstantiator {
           builder.append(":");
       isFirst = false;
       String part = null;
-      if(reg instanceof ClassRegistrar) {
-        ClassRegistrar r = (ClassRegistrar)reg;
+      if (reg instanceof ClassRegistrar<?> r) {
         part = r.getRegisteredClass().getName();
-      }
-      else if(reg instanceof ReflectingRegistrar) {
-        ReflectingRegistrar r = (ReflectingRegistrar)reg;
+      } else if (reg instanceof ReflectingRegistrar<?> r) {
         part = r.getRegisteredClass().getName() + "," + r.getSerializerClass().getName();
-      }
-      else if(reg instanceof ReflectingDefaultRegistrar) {
-        ReflectingDefaultRegistrar r = (ReflectingDefaultRegistrar)reg;
+      } else if (reg instanceof ReflectingDefaultRegistrar<?> r) {
         part = r.getRegisteredClass().getName() + "," + r.getSerializerClass().getName();
-      }
-      else {
+      } else {
         throw new ConfigurationException("Unknown type of reflecting registrar: " + reg.getClass().getName());
       }
       builder.append(part);
@@ -269,21 +262,15 @@ public class ReflectingInstantiator extends KryoInstantiator {
 
   @Override
   public boolean equals(Object that) {
-    if(null == that) {
-      return false;
+    if (that instanceof ReflectingInstantiator other) {
+      return regRequired == other.regRequired &&
+        skipMissing == other.skipMissing &&
+        kryoClass.equals(other.kryoClass) &&
+        instStratClass.equals(other.instStratClass) &&
+        registrations.equals(other.registrations) &&
+        defaultRegistrations.equals(other.defaultRegistrations);
     }
-    else if(that instanceof ReflectingInstantiator) {
-      ReflectingInstantiator thatri = (ReflectingInstantiator)that;
-      return (regRequired == thatri.regRequired) &&
-        (skipMissing == thatri.skipMissing) &&
-        kryoClass.equals(thatri.kryoClass) &&
-        instStratClass.equals(thatri.instStratClass) &&
-        registrations.equals(thatri.registrations) &&
-        defaultRegistrations.equals(thatri.defaultRegistrations);
-    }
-    else {
-      return false;
-    }
+    return false;
   }
 
 }

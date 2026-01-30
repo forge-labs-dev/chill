@@ -35,14 +35,9 @@ public class ClassRegistrar<T> implements IKryoRegistrar {
 
   @Override
   public boolean equals(Object that) {
-    if(null == that) {
-      return false;
+    if (that instanceof ClassRegistrar<?> other) {
+      return klass.equals(other.klass);
     }
-    else if(that instanceof ClassRegistrar) {
-      return klass.equals(((ClassRegistrar)that).klass);
-    }
-    else {
-      return false;
-    }
+    return false;
   }
 }
