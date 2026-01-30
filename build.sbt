@@ -19,7 +19,7 @@ def scalaVersionSpecificFolders(srcBaseDir: java.io.File, scalaVersion: String):
   }
 
 val scala213 = "2.13.18"
-val scala3 = "3.3.4"
+val scala3 = "3.3.7"
 val allScalaVersions = Seq(scala213, scala3)
 
 val sharedSettings = Seq(

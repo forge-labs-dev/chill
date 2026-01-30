@@ -31,7 +31,7 @@ sbt "; +scalafmtAll; scalafmtSbt"
 sbt "; scalafixEnable; scalafix --check; test:scalafix --check"
 
 # Binary compatibility check (MIMA)
-sbt "++2.12.21 mimaReportBinaryIssues"
+sbt "++2.13.18 mimaReportBinaryIssues"
 
 # Coverage report
 sbt coverage clean test coverageReport
@@ -75,9 +75,9 @@ new ScalaKryoInstantiator()
 
 ## Cross-Version Support
 
-- **Scala versions**: 2.12.21, 2.13.18, 3.3.4 (partial - core modules only)
+- **Scala versions**: 2.13.18, 3.3.7 (partial - core modules only for Scala 3)
 - **Java versions**: 17, 21, 25
-- Version-specific source directories: `src/main/scala-2.12-/` and `src/main/scala-2.13+/`
+- Version-specific source directories: `src/main/scala-2.13+/` (shared with Scala 3)
 - Binary compatibility maintained with version 0.10.0 via MIMA
 
 ## Local Development Environment
