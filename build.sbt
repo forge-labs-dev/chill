@@ -3,10 +3,10 @@ import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 val akkaVersion = "2.6.20"
 val algebirdVersion = "0.13.9"
 val bijectionVersion = "0.9.7"
-val kryoVersion = "4.0.2"
+val kryoVersion = "4.0.3"
 val scroogeVersion = "21.2.0"
 val asmVersion = "4.16"
-val protobufVersion = "3.22.2"
+val protobufVersion = "3.25.5"
 
 def scalaVersionSpecificFolders(srcBaseDir: java.io.File, scalaVersion: String): List[File] =
   CrossVersion.partialVersion(scalaVersion) match {
@@ -219,7 +219,7 @@ lazy val chillStorm = module("storm")
   .settings(
     crossPaths := false,
     autoScalaLibrary := false,
-    libraryDependencies += "org.apache.storm" % "storm-core" % "2.4.0" % "provided"
+    libraryDependencies += "org.apache.storm" % "storm-core" % "2.6.4" % "provided"
   )
   .dependsOn(chillJava)
 
@@ -230,8 +230,8 @@ lazy val chillHadoop = module("hadoop")
     autoScalaLibrary := false,
     libraryDependencies ++= Seq(
       "org.apache.hadoop" % "hadoop-core" % "1.2.1" % "provided",
-      "org.slf4j" % "slf4j-api" % "2.0.7",
-      "org.slf4j" % "slf4j-log4j12" % "2.0.7" % "provided"
+      "org.slf4j" % "slf4j-api" % "2.0.16",
+      "org.slf4j" % "slf4j-log4j12" % "2.0.16" % "provided"
     )
   )
   .dependsOn(chillJava)
@@ -241,7 +241,7 @@ lazy val chillThrift = module("thrift").settings(
   crossPaths := false,
   autoScalaLibrary := false,
   libraryDependencies ++= Seq(
-    "org.apache.thrift" % "libthrift" % "0.17.0" % "provided"
+    "org.apache.thrift" % "libthrift" % "0.21.0" % "provided"
   )
 )
 
@@ -250,7 +250,7 @@ lazy val chillScrooge = module("scrooge")
   .settings(
     crossScalaVersions := scala2Versions,
     libraryDependencies ++= Seq(
-      ("org.apache.thrift" % "libthrift" % "0.17.0").exclude("junit", "junit"),
+      ("org.apache.thrift" % "libthrift" % "0.21.0").exclude("junit", "junit"),
       "com.twitter" %% "scrooge-serializer" % scroogeVersion
     )
   )
