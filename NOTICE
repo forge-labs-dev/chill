@@ -3,10 +3,54 @@ Copyright 2012 Twitter, Inc.
 
 Third Party Dependencies:
 
-Kryo 2.17
-BSD 3-Clause License
-http://code.google.com/p/kryo
+Core Dependencies:
 
-Commons-Codec 1.7
-Apache Public License 2.0
-http://hadoop.apache.org
+Kryo 4.0.3
+BSD 3-Clause License
+https://github.com/EsotericSoftware/kryo
+
+XBean ASM 4.28 (shaded)
+Apache License 2.0
+https://github.com/apache/geronimo-xbean
+
+Objenesis (bundled with Kryo)
+Apache License 2.0
+http://objenesis.org
+
+Optional Module Dependencies:
+
+Apache Pekko 1.0.3 (chill-pekko)
+Apache License 2.0
+https://pekko.apache.org
+
+Apache Thrift 0.22.0 (chill-thrift, chill-scrooge)
+Apache License 2.0
+https://thrift.apache.org
+
+Apache Hadoop (chill-hadoop)
+Apache License 2.0
+https://hadoop.apache.org
+
+Apache Storm (chill-storm)
+Apache License 2.0
+https://storm.apache.org
+
+Apache Avro (chill-avro)
+Apache License 2.0
+https://avro.apache.org
+
+Google Protocol Buffers 3.25.5 (chill-protobuf)
+BSD 3-Clause License
+https://github.com/protocolbuffers/protobuf
+
+Twitter Bijection 0.9.7 (chill-bijection, chill-avro)
+Apache License 2.0
+https://github.com/twitter/bijection
+
+Twitter Algebird 0.13.10 (chill-algebird)
+Apache License 2.0
+https://github.com/twitter/algebird
+
+Twitter Scrooge 21.2.0 (chill-scrooge)
+Apache License 2.0
+https://github.com/twitter/scrooge
