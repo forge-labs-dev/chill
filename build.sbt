@@ -5,7 +5,7 @@ val algebirdVersion = "0.13.9"
 val bijectionVersion = "0.9.7"
 val kryoVersion = "4.0.3"
 val scroogeVersion = "21.2.0"
-val asmVersion = "4.16"
+val asmVersion = "4.28"
 val protobufVersion = "3.25.5"
 
 def scalaVersionSpecificFolders(srcBaseDir: java.io.File, scalaVersion: String): List[File] =
@@ -179,7 +179,7 @@ lazy val chill = Project(
     name := "chill",
     mimaPreviousArtifacts := Set("com.twitter" %% "chill" % binaryCompatVersion),
     mimaBinaryIssueFilters ++= ignoredABIProblems,
-    libraryDependencies += "org.apache.xbean" % "xbean-asm7-shaded" % asmVersion
+    libraryDependencies += "org.apache.xbean" % "xbean-asm9-shaded" % asmVersion
   )
   .dependsOn(chillJava)
 
