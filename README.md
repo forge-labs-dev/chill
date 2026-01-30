@@ -9,6 +9,11 @@ Extensions for the [Kryo serialization library](https://github.com/EsotericSoftw
 serializers and a set of classes to ease configuration of Kryo in systems like Hadoop, Storm,
 Akka, etc.
 
+### Requirements
+
+- **Java**: 17 or later
+- **Scala**: 2.12.x, 2.13.x, or 3.3.x (core modules only for Scala 3)
+
 ### Compatibility
 
 Serialization compatibility is **NOT** guaranteed between releases, and for this reason, we don't recommend using it for long-term storage. Serialization is highly dependent on scala version compatibility and on the underlying Kryo serializers, which take different approaches to compatibility.
@@ -22,8 +27,10 @@ sbt:chill-all>  publishM2 # to publish chill to your local .m2 repo
 sbt:chill-all>  publishLocal # publish to local ivy repo.
 ```
 
-Chill has a set of subprojects: chill-java, chill-hadoop, chill-storm and chill-scala.  Other than
+Chill has a set of subprojects: chill-java, chill-hadoop, chill-storm and chill-scala. Other than
 chill-scala, all these projects are written in Java so they are easy to use on any JVM platform.
+
+**Scala 3 support:** The core modules (`chill`, `chill-java`, `chill-hadoop`, `chill-storm`, `chill-thrift`, `chill-protobuf`) support Scala 3. Modules depending on libraries without Scala 3 support (`chill-akka`, `chill-bijection`, `chill-algebird`, `chill-scrooge`, `chill-avro`) remain Scala 2.x only.
 
 ## Chill-Java
 
@@ -194,7 +201,7 @@ A list of contributors to the project can be found here: [Contributors](https://
 
 ## Maven
 
-Chill modules are available on Maven Central. The current groupid and version for all modules is, respectively, `"com.twitter"` and  `0.10.0`. Each scala project is published for `2.11`, `2.12` and `2.13`. Search [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cchill) when in doubt.
+Chill modules are available on Maven Central. The current groupid and version for all modules is, respectively, `"com.twitter"` and `0.10.0`. Core modules are published for Scala `2.12`, `2.13`, and `3`. Modules with Scala 2.x-only dependencies are published for `2.12` and `2.13`. Search [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cchill) when in doubt.
 
 `chill-scala` is not published separately; to use it, reference `chill`. To add the dependency to your project using SBT:
 
