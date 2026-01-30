@@ -10,8 +10,6 @@ val protobufVersion = "3.25.5"
 
 def scalaVersionSpecificFolders(srcBaseDir: java.io.File, scalaVersion: String): List[File] =
   CrossVersion.partialVersion(scalaVersion) match {
-    case Some((2, y)) if y <= 12 =>
-      new java.io.File(s"${srcBaseDir.getPath}-2.12-") :: Nil
     case Some((2, y)) if y >= 13 =>
       new java.io.File(s"${srcBaseDir.getPath}-2.13+") :: Nil
     case Some((3, _)) =>
@@ -20,11 +18,9 @@ def scalaVersionSpecificFolders(srcBaseDir: java.io.File, scalaVersion: String):
     case _ => Nil
   }
 
-val scala212 = "2.12.21"
 val scala213 = "2.13.18"
 val scala3 = "3.3.4"
-val scala2Versions = Seq(scala212, scala213)
-val allScalaVersions = scala2Versions :+ scala3
+val allScalaVersions = Seq(scala213, scala3)
 
 val sharedSettings = Seq(
   organization := "com.twitter",
@@ -197,10 +193,10 @@ lazy val chillPekko = module("pekko")
   )
   .dependsOn(chill % "test->test;compile->compile")
 
-// Bijection only supports Scala 2.x
+// Bijection only supports Scala 2.13
 lazy val chillBijection = module("bijection")
   .settings(
-    crossScalaVersions := scala2Versions,
+    crossScalaVersions := Seq(scala213),
     libraryDependencies ++= Seq(
       "com.twitter" %% "bijection-core" % bijectionVersion
     )
@@ -244,10 +240,10 @@ lazy val chillThrift = module("thrift").settings(
   )
 )
 
-// Scrooge only supports Scala 2.x
+// Scrooge only supports Scala 2.13
 lazy val chillScrooge = module("scrooge")
   .settings(
-    crossScalaVersions := scala2Versions,
+    crossScalaVersions := Seq(scala213),
     libraryDependencies ++= Seq(
       ("org.apache.thrift" % "libthrift" % "0.22.0").exclude("junit", "junit"),
       "com.twitter" %% "scrooge-serializer" % scroogeVersion
@@ -267,10 +263,10 @@ lazy val chillProtobuf = module("protobuf")
   )
   .dependsOn(chillJava)
 
-// Avro depends on bijection which only supports Scala 2.x
+// Avro depends on bijection which only supports Scala 2.13
 lazy val chillAvro = module("avro")
   .settings(
-    crossScalaVersions := scala2Versions,
+    crossScalaVersions := Seq(scala213),
     libraryDependencies ++= Seq(
       "com.twitter" %% "bijection-avro" % bijectionVersion,
       "junit" % "junit" % "4.13.2" % "test"
@@ -278,10 +274,10 @@ lazy val chillAvro = module("avro")
   )
   .dependsOn(chill, chillJava, chillBijection)
 
-// Algebird only supports Scala 2.x
+// Algebird only supports Scala 2.13
 lazy val chillAlgebird = module("algebird")
   .settings(
-    crossScalaVersions := scala2Versions,
+    crossScalaVersions := Seq(scala213),
     libraryDependencies ++= Seq(
       "com.twitter" %% "algebird-core" % algebirdVersion
     )

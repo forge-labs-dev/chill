@@ -19,16 +19,91 @@ package com.twitter.chill
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
+// Classes without outer reference (defined in companion object for Scala 3 compatibility)
+object ClosureCleanerAdditionalSpec {
+  class NoOuter {
+    val x = 1
+  }
+
+  class NoOuter2 {
+    val x = 1
+  }
+
+  class TestForInnerCache {
+    val x = 1
+  }
+
+  class TestForFieldCache {
+    val x = 1
+  }
+}
+
 /**
  * Additional tests for ClosureCleaner focusing on edge cases and coverage gaps
  */
 class ClosureCleanerAdditionalSpec extends AnyWordSpec with Matchers {
+  import ClosureCleanerAdditionalSpec._
+
+  // Define test classes at class level for Scala 3 compatibility
+  class TestClass {
+    var value: Int = 42
+  }
+
+  class TestOuter {
+    val x = 1
+  }
+
+  class TestOuter2 {
+    val x = 1
+  }
+
+  class WithFields {
+    val field1 = 1
+    val field2 = "hello"
+    val field3 = 3.14
+  }
+
+  class ComplexOuter {
+    val outerVal = 10
+    def createClosure: Int => Int = { x =>
+      val localVal = 5
+      x + localVal + outerVal
+    }
+  }
+
+  // Nested class hierarchy for testing outer class detection
+  class Level1 {
+    class Level2 {
+      class Level3 {
+        val x = 1
+      }
+    }
+  }
+
+  // Another hierarchy for outer field testing
+  class Outer1 {
+    val a = 1
+    class Inner1 {
+      val b = 2
+    }
+  }
+
+  class TestOuter3 {
+    val normalField = 1
+    class Inner3 {
+      val x = 1
+    }
+  }
+
+  class OuterWithInner {
+    val closure: Int => Int => Int = (x: Int) => {
+      val inner = (y: Int) => x + y
+      inner
+    }
+  }
 
   "ClosureCleaner" should {
     "instantiate class without constructor" in {
-      class TestClass {
-        var value: Int = 42
-      }
       val instance = ClosureCleaner.instantiateClass(classOf[TestClass])
       instance should not be null
       instance shouldBe a[TestClass]
@@ -37,17 +112,11 @@ class ClosureCleanerAdditionalSpec extends AnyWordSpec with Matchers {
     }
 
     "handle outerFieldOf for class without outer" in {
-      class NoOuter {
-        val x = 1
-      }
       val result = ClosureCleaner.outerFieldOf(classOf[NoOuter])
       result should be(None)
     }
 
     "cache outerFieldOf results" in {
-      class TestOuter {
-        val x = 1
-      }
       // Call twice to test caching
       val result1 = ClosureCleaner.outerFieldOf(classOf[TestOuter])
       val result2 = ClosureCleaner.outerFieldOf(classOf[TestOuter])
@@ -55,13 +124,6 @@ class ClosureCleanerAdditionalSpec extends AnyWordSpec with Matchers {
     }
 
     "get outer classes hierarchy" in {
-      class Level1 {
-        class Level2 {
-          class Level3 {
-            val x = 1
-          }
-        }
-      }
       val l1 = new Level1
       val l2 = new l1.Level2
       val l3 = new l2.Level3
@@ -72,21 +134,12 @@ class ClosureCleanerAdditionalSpec extends AnyWordSpec with Matchers {
     }
 
     "cache outer classes hierarchy" in {
-      class TestOuter2 {
-        val x = 1
-      }
       val result1 = ClosureCleaner.outerClassesOf(classOf[TestOuter2])
       val result2 = ClosureCleaner.outerClassesOf(classOf[TestOuter2])
       result1 should be(result2)
     }
 
     "get outers of object with hierarchy" in {
-      class Outer1 {
-        val a = 1
-        class Inner1 {
-          val b = 2
-        }
-      }
       val outer = new Outer1
       val inner = new outer.Inner1
 
@@ -96,21 +149,12 @@ class ClosureCleanerAdditionalSpec extends AnyWordSpec with Matchers {
     }
 
     "get outers of object without outer" in {
-      class NoOuter2 {
-        val x = 1
-      }
       val obj = new NoOuter2
       val outers = ClosureCleaner.getOutersOf(obj)
       outers should be(empty)
     }
 
     "identify outer fields correctly" in {
-      class TestOuter3 {
-        val normalField = 1
-        class Inner3 {
-          val x = 1
-        }
-      }
       val outer = new TestOuter3
       val inner = new outer.Inner3
       val outerField = ClosureCleaner.outerFieldOf(inner.getClass)
@@ -119,12 +163,6 @@ class ClosureCleanerAdditionalSpec extends AnyWordSpec with Matchers {
     }
 
     "find inner classes" in {
-      class OuterWithInner {
-        val closure = (x: Int) => {
-          val inner = (y: Int) => x + y
-          inner
-        }
-      }
       val obj = new OuterWithInner
       // This tests the innerClassesOf method and InnerClosureFinder
       val innerClasses = ClosureCleaner.innerClassesOf(obj.closure.getClass)
@@ -133,20 +171,12 @@ class ClosureCleanerAdditionalSpec extends AnyWordSpec with Matchers {
     }
 
     "cache inner classes results" in {
-      class TestForInnerCache {
-        val x = 1
-      }
       val result1 = ClosureCleaner.innerClassesOf(classOf[TestForInnerCache])
       val result2 = ClosureCleaner.innerClassesOf(classOf[TestForInnerCache])
       result1 should be(result2)
     }
 
     "find accessed fields" in {
-      class WithFields {
-        val field1 = 1
-        val field2 = "hello"
-        val field3 = 3.14
-      }
       val obj = new WithFields
       val fields = ClosureCleaner.accessedFieldsOf(obj.getClass)
       // May find some fields depending on how the class is used
@@ -154,9 +184,6 @@ class ClosureCleanerAdditionalSpec extends AnyWordSpec with Matchers {
     }
 
     "cache accessed fields results" in {
-      class TestForFieldCache {
-        val x = 1
-      }
       val result1 = ClosureCleaner.accessedFieldsOf(classOf[TestForFieldCache])
       val result2 = ClosureCleaner.accessedFieldsOf(classOf[TestForFieldCache])
       result1 should be(result2)
@@ -177,14 +204,6 @@ class ClosureCleanerAdditionalSpec extends AnyWordSpec with Matchers {
     }
 
     "handle complex nested closures" in {
-      class ComplexOuter {
-        val outerVal = 10
-        def createClosure: Int => Int = { x =>
-          val localVal = 5
-          x + localVal + outerVal
-        }
-      }
-
       val obj = new ComplexOuter
       val closure = obj.createClosure
 

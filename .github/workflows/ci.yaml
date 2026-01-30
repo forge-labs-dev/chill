@@ -33,7 +33,6 @@ jobs:
           - "21"
           - "25"
         scala:
-          - "2.12.21"
           - "2.13.18"
   test:
     runs-on: ubuntu-latest
@@ -52,7 +51,6 @@ jobs:
           - "21"
           - "25"
         scala:
-          - "2.12.21"
           - "2.13.18"
           - "3.3.4"
   testWithCoverageReport:
