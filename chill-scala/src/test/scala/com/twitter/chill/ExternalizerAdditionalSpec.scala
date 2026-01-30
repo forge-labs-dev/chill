@@ -82,7 +82,7 @@ class ExternalizerAdditionalSpec extends AnyWordSpec with Matchers with BaseProp
     }
 
     "handle complex objects with nested structures" in {
-      val complex = Map(
+      val complex: Map[String, Any] = Map(
         "list" -> List(1, 2, 3),
         "set" -> Set("a", "b"),
         "nested" -> Map("inner" -> 42)
