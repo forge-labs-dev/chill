@@ -150,7 +150,10 @@ val ignoredABIProblems = {
     exclude[IncompatibleResultTypeProblem]("com.twitter.chill.Tuple1*Serializer.read"),
     exclude[IncompatibleMethTypeProblem]("com.twitter.chill.Tuple1*Serializer.write"),
     exclude[IncompatibleResultTypeProblem]("com.twitter.chill.Tuple2*Serializer.read"),
-    exclude[IncompatibleMethTypeProblem]("com.twitter.chill.Tuple2*Serializer.write")
+    exclude[IncompatibleMethTypeProblem]("com.twitter.chill.Tuple2*Serializer.write"),
+    // Base64 class removed in favor of java.util.Base64 (Java 8+)
+    exclude[MissingClassProblem]("com.twitter.chill.Base64"),
+    exclude[MissingClassProblem]("com.twitter.chill.Base64$*")
   )
 }
 
