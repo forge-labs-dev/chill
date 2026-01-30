@@ -103,16 +103,8 @@ public class ConfiguredInstantiator extends KryoInstantiator {
         return instClass.getDeclaredConstructor().newInstance();
       }
     }
-    catch(NoSuchMethodException x) {
-      throw new ConfigurationException(x);
-    }
-    catch(InstantiationException x) {
-      throw new ConfigurationException(x);
-    }
-    catch(IllegalAccessException x) {
-      throw new ConfigurationException(x);
-    }
-    catch(InvocationTargetException x) {
+    catch (NoSuchMethodException | InstantiationException |
+           IllegalAccessException | InvocationTargetException x) {
       throw new ConfigurationException(x);
     }
   }
@@ -153,17 +145,10 @@ public class ConfiguredInstantiator extends KryoInstantiator {
     return Base64.encodeBytes(out.toBytes());
   }
 
-  /** Simple class to hold the cached copy of the latest kryo instantiator.
-   * As well as its corresponding base64 encoded data.
+  /** Simple record to hold the cached copy of the latest kryo instantiator
+   * along with its corresponding base64 encoded data.
    */
-  private static class CachedKryoInstantiator {
-    public final KryoInstantiator kryoInstantiator;
-    public final String base64Value;
-    public CachedKryoInstantiator(KryoInstantiator ki, String bv) {
-      kryoInstantiator = ki;
-      base64Value = bv;
-    }
-  }
+  private record CachedKryoInstantiator(KryoInstantiator kryoInstantiator, String base64Value) {}
 
   private static CachedKryoInstantiator cachedKryoInstantiator = null;
 

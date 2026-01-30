@@ -39,15 +39,9 @@ public class ReflectingDefaultRegistrar<T> implements IKryoRegistrar {
 
   @Override
   public boolean equals(Object that) {
-    if(null == that) {
-      return false;
+    if (that instanceof ReflectingDefaultRegistrar<?> other) {
+      return klass.equals(other.klass) && serializerKlass.equals(other.serializerKlass);
     }
-    else if(that instanceof ReflectingDefaultRegistrar) {
-      return klass.equals(((ReflectingDefaultRegistrar)that).klass) &&
-        serializerKlass.equals(((ReflectingDefaultRegistrar)that).serializerKlass);
-    }
-    else {
-      return false;
-    }
+    return false;
   }
 }

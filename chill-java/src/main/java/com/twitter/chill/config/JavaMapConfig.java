@@ -19,29 +19,28 @@ package com.twitter.chill.config;
 import java.util.Map;
 
 /**
- * This takes a raw Map and calls toString on the objects before returning them as values
+ * This takes a Map and calls toString on the objects before returning them as values
  */
 public class JavaMapConfig extends Config {
 
-  final Map conf;
-  public JavaMapConfig(Map conf) {
-    this.conf = conf;
+  final Map<String, Object> conf;
+
+  public JavaMapConfig(Map<String, ?> conf) {
+    // We need to store as Map<String, Object> to allow put() with String values
+    this.conf = new java.util.HashMap<>(conf);
   }
+
   public JavaMapConfig() {
-    this(new java.util.HashMap<String, String>());
+    this.conf = new java.util.HashMap<>();
   }
-  /** Return null if this key is undefined */
+
   /** Return null if this key is undefined */
   @Override
   public String get(String key) {
     Object value = conf.get(key);
-    if(null != value) {
-      return value.toString();
-    }
-    else {
-      return null;
-    }
+    return value != null ? value.toString() : null;
   }
+
   @Override
   public void set(String key, String value) {
     conf.put(key, value);
