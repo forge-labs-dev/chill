@@ -1,6 +1,6 @@
 import com.typesafe.tools.mima.plugin.MimaPlugin.mimaDefaultSettings
 
-val akkaVersion = "2.6.20"
+val pekkoVersion = "1.0.3"
 val algebirdVersion = "0.13.9"
 val bijectionVersion = "0.9.7"
 val kryoVersion = "4.0.3"
@@ -110,7 +110,7 @@ lazy val chillAll = Project(
     chillHadoop,
     chillThrift,
     chillProtobuf,
-    chillAkka,
+    chillPekko,
     chillAvro,
     chillAlgebird
   )
@@ -126,7 +126,7 @@ lazy val noPublishSettings = Seq(
 /**
  * This returns the youngest jar we released that is compatible with the current.
  */
-val unreleasedModules = Set[String]("akka", "avro")
+val unreleasedModules = Set[String]("pekko", "avro")
 val javaOnly = Set[String]("storm", "java", "hadoop", "thrift", "protobuf")
 val binaryCompatVersion = "0.10.0"
 
@@ -183,17 +183,16 @@ lazy val chill = Project(
   )
   .dependsOn(chillJava)
 
-def akka(scalaVersion: String) =
-  ("com.typesafe.akka" %% "akka-actor" % akkaVersion) % "provided"
+def pekko(scalaVersion: String) =
+  ("org.apache.pekko" %% "pekko-actor" % pekkoVersion) % "provided"
 
-// Akka 2.6 only supports Scala 2.x
-lazy val chillAkka = module("akka")
+// Pekko supports Scala 2.x and 3.x
+lazy val chillPekko = module("pekko")
   .settings(
-    crossScalaVersions := scala2Versions,
     resolvers += Resolver.typesafeRepo("releases"),
     libraryDependencies ++= Seq(
-      "com.typesafe" % "config" % "1.4.2",
-      scalaVersion(sv => akka(sv)).value
+      "com.typesafe" % "config" % "1.4.3",
+      scalaVersion(sv => pekko(sv)).value
     )
   )
   .dependsOn(chill % "test->test;compile->compile")
