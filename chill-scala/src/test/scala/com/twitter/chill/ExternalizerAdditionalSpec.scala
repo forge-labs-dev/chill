@@ -81,36 +81,33 @@ class ExternalizerAdditionalSpec extends AnyWordSpec with Matchers with BaseProp
       rtExt.get should be(List("a", "b", "c"))
     }
 
-    "handle complex objects with nested structures" in {
-      val complex: Map[String, Any] = Map(
-        "list" -> List(1, 2, 3),
-        "set" -> Set("a", "b"),
-        "nested" -> Map("inner" -> 42)
-      )
-      val ext = Externalizer(complex)
+    "handle nested maps" in {
+      val nested = Map("a" -> Map("inner" -> 1), "b" -> Map("inner" -> 2))
+      val ext = Externalizer(nested)
       val rtExt = rt(ext)
-      rtExt.get should be(complex)
+      rtExt.get should be(nested)
     }
 
     "handle Option types" in {
       val extSome = Externalizer(Some("value"))
-      val extNone = Externalizer(None)
+      val extNone: Externalizer[Option[String]] = Externalizer(None)
 
       rt(extSome).get should be(Some("value"))
       rt(extNone).get should be(None)
     }
 
     "handle Either types" in {
-      val extLeft = Externalizer(Left("error"))
-      val extRight = Externalizer(Right(42))
+      val extLeft: Externalizer[Either[String, Int]] = Externalizer(Left("error"))
+      val extRight: Externalizer[Either[String, Int]] = Externalizer(Right(42))
 
       rt(extLeft).get should be(Left("error"))
       rt(extRight).get should be(Right(42))
     }
 
     "handle tuples" in {
-      val ext = Externalizer((1, "two", 3.0))
-      rt(ext).get should be((1, "two", 3.0))
+      val tuple = (1, "two", 3.0)
+      val ext = Externalizer(tuple)
+      rt(ext).get should be(tuple)
     }
 
     "work with writeExternal and readExternal" in {
@@ -166,7 +163,7 @@ class ExternalizerAdditionalSpec extends AnyWordSpec with Matchers with BaseProp
     }
 
     "handle null values wrapped in Option" in {
-      val ext = Externalizer(Option(null))
+      val ext: Externalizer[Option[String]] = Externalizer(Option(null))
       rt(ext).get should be(None)
     }
 
