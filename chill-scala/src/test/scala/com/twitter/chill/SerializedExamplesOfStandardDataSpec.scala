@@ -1,5 +1,6 @@
 package com.twitter.chill
 
+import _root_.java.util.Base64
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -98,7 +99,7 @@ class SerializedExamplesOfStandardDataSpec extends AnyWordSpec with Matchers {
     )
 
     val serializedScalaInstance =
-      try Base64.encodeBytes(pool.toBytesWithClass(scalaInstance))
+      try Base64.getEncoder.encodeToString(pool.toBytesWithClass(scalaInstance))
       catch {
         case e: Throwable =>
           err(s"can't kryo serialize $scalaInstance: $e")
@@ -111,7 +112,7 @@ class SerializedExamplesOfStandardDataSpec extends AnyWordSpec with Matchers {
     )
 
     val bytes =
-      try Base64.decode(serializedExample)
+      try Base64.getDecoder.decode(serializedExample)
       catch {
         case e: Throwable =>
           err(
@@ -142,7 +143,7 @@ class SerializedExamplesOfStandardDataSpec extends AnyWordSpec with Matchers {
       )
     } else {
       val roundtrip =
-        try Base64.encodeBytes(pool.toBytesWithClass(deserialized))
+        try Base64.getEncoder.encodeToString(pool.toBytesWithClass(deserialized))
         catch {
           case e: Throwable =>
             err(s"can't kryo serialize roundtrip $deserialized with serialization id $idForScalaInstance: $e")
