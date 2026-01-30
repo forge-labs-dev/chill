@@ -23,8 +23,8 @@ package com.twitter.chill
 import _root_.java.lang.reflect.Field
 import _root_.java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, ObjectOutputStream}
 
-import org.apache.xbean.asm7.Opcodes._
-import org.apache.xbean.asm7.{ClassReader, ClassVisitor, MethodVisitor, Type}
+import org.apache.xbean.asm9.Opcodes._
+import org.apache.xbean.asm9.{ClassReader, ClassVisitor, MethodVisitor, Type}
 
 import scala.annotation.tailrec
 import scala.collection.mutable.{Map => MMap, Set => MSet, Stack => MStack}
@@ -241,7 +241,7 @@ class FieldAccessFinder(
     output: MMap[Class[_], MSet[String]],
     specificMethod: Option[MethodIdentifier[_]] = None,
     visitedMethods: MSet[MethodIdentifier[_]] = MSet.empty
-) extends ClassVisitor(ASM7) {
+) extends ClassVisitor(ASM9) {
   override def visitMethod(
       access: Int,
       name: String,
@@ -255,7 +255,7 @@ class FieldAccessFinder(
     ) {
       null
     } else {
-      new MethodVisitor(ASM7) {
+      new MethodVisitor(ASM9) {
         override def visitFieldInsn(op: Int, owner: String, name: String, desc: String): Unit =
           if (op == GETFIELD) {
             val ownerName = owner.replace('/', '.')
@@ -307,7 +307,7 @@ class FieldAccessFinder(
  *   }
  * }}}
  */
-class InnerClosureFinder(output: MSet[Class[_]]) extends ClassVisitor(ASM7) {
+class InnerClosureFinder(output: MSet[Class[_]]) extends ClassVisitor(ASM9) {
   var myName: String = _
 
   override def visit(
@@ -327,7 +327,7 @@ class InnerClosureFinder(output: MSet[Class[_]]) extends ClassVisitor(ASM7) {
       sig: String,
       exceptions: Array[String]
   ): MethodVisitor =
-    new MethodVisitor(ASM7) {
+    new MethodVisitor(ASM9) {
       override def visitMethodInsn(op: Int, owner: String, name: String, desc: String, itf: Boolean): Unit = {
         val argTypes = Type.getArgumentTypes(desc)
         if (
