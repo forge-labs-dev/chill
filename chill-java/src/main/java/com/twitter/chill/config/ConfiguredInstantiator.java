@@ -16,9 +16,9 @@ limitations under the License.
 
 package com.twitter.chill.config;
 import com.twitter.chill.KryoInstantiator;
-import com.twitter.chill.Base64;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Base64;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -133,16 +133,16 @@ public class ConfiguredInstantiator extends KryoInstantiator {
 
   protected static KryoInstantiator deserialize(Kryo k, String base64Value) throws ConfigurationException {
     try {
-      return (KryoInstantiator)k.readClassAndObject(new Input(Base64.decode(base64Value)));
-    }
-    catch(java.io.IOException iox) {
-      throw new ConfigurationException("could not deserialize: " + base64Value, iox);
+      return (KryoInstantiator)k.readClassAndObject(new Input(Base64.getDecoder().decode(base64Value)));
+    } catch (IllegalArgumentException e) {
+      throw new ConfigurationException("could not deserialize: " + base64Value, e);
     }
   }
+
   protected static String serialize(Kryo k, KryoInstantiator ki) {
     Output out = new Output(1 << 10, 1 << 19); // 1 MB in config is too much
     k.writeClassAndObject(out, ki);
-    return Base64.encodeBytes(out.toBytes());
+    return Base64.getEncoder().encodeToString(out.toBytes());
   }
 
   /** Simple record to hold the cached copy of the latest kryo instantiator
