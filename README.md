@@ -30,7 +30,7 @@ sbt:chill-all>  publishLocal # publish to local ivy repo.
 Chill has a set of subprojects: chill-java, chill-hadoop, chill-storm and chill-scala. Other than
 chill-scala, all these projects are written in Java so they are easy to use on any JVM platform.
 
-**Scala 3 support:** The core modules (`chill`, `chill-java`, `chill-hadoop`, `chill-storm`, `chill-thrift`, `chill-protobuf`) support Scala 3. Modules depending on libraries without Scala 3 support (`chill-akka`, `chill-bijection`, `chill-algebird`, `chill-scrooge`, `chill-avro`) remain Scala 2.x only.
+**Scala 3 support:** The core modules (`chill`, `chill-java`, `chill-hadoop`, `chill-storm`, `chill-thrift`, `chill-protobuf`, `chill-pekko`) support Scala 3. Modules depending on libraries without Scala 3 support (`chill-bijection`, `chill-algebird`, `chill-scrooge`, `chill-avro`) remain Scala 2.x only.
 
 ## Chill-Java
 
@@ -142,39 +142,39 @@ val tryDecode: scala.util.Try[Any] = KryoInjection.invert(bytes)
 
 KryoInjection can be composed with Bijections and Injections from `com.twitter.bijection`.
 
-## Chill-Akka
+## Chill-Pekko
 
 To use, add a key to your config like:
 ```
-    akka.actor.serializers {
-      kryo = "com.twitter.chill.akka.AkkaSerializer"
+    pekko.actor.serializers {
+      kryo = "com.twitter.chill.pekko.PekkoSerializer"
     }
 ```
 
 Then for the super-classes of all your message types, for instance, `java.io.Serializable` (all case classes and case objects are serializable), write:
 ```scala
-   akka.actor.serialization-bindings {
+   pekko.actor.serialization-bindings {
      "java.io.Serializable" = kryo
    }
 ```
 
-With this in place you can now [disable Java serialization entirely](https://doc.akka.io/docs/akka/current/remoting.html#disable-java-serializer):
+With this in place you can now [disable Java serialization entirely](https://pekko.apache.org/docs/pekko/current/remoting.html#disable-java-serializer):
 
 ```scala
-akka.actor {
+pekko.actor {
   # Set this to on to enable serialization-bindings defined in
   # additional-serialization-bindings. Those are by default not included
   # for backwards compatibility reasons. They are enabled by default if
-  # akka.remote.artery.enabled=on.
+  # pekko.remote.artery.enabled=on.
   enable-additional-serialization-bindings = on
-  
+
   allow-java-serialization = off
 }
 ```
 
 
-If you want to use the `chill.config.ConfiguredInstantiator` see `ConfiguredAkkaSerializer`
-otherwise, subclass `AkkaSerializer` and override `kryoInstantiator` to control how the `Kryo`
+If you want to use the `chill.config.ConfiguredInstantiator` see `ConfiguredPekkoSerializer`
+otherwise, subclass `PekkoSerializer` and override `kryoInstantiator` to control how the `Kryo`
 object is created.
 
 ## Documentation
