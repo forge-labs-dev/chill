@@ -39,7 +39,7 @@ public class ReflectingRegistrar<T> implements IKryoRegistrar {
   @Override
   public void apply(Kryo k) {
     try {
-      k.register(klass, serializerKlass.newInstance());
+      k.register(klass, serializerKlass.getDeclaredConstructor().newInstance());
     } catch (Exception ex) {
       throw new IllegalArgumentException("Unable to create serializer \"" + serializerKlass.getName() + "\" for class: "
               + Util.className(klass), ex);

@@ -121,12 +121,12 @@ object ClosureCleaner {
       // mutated by InnerClosureFinder
       val set = MSet[Class[_]]()
       AsmUtil.classReader(stack.pop()).foreach(cr => cr.accept(new InnerClosureFinder(set), 0))
-      (set -- seen).foreach { cls =>
+      set.diff(seen).foreach { cls =>
         seen += cls
         stack.push(cls)
       }
     }
-    (seen - inCls).toSet
+    seen.toSet - inCls
   }
 
   def innerClassesOf(cls: Class[_]): Set[Class[_]] =

@@ -62,6 +62,8 @@ public class ReflectingInstantiator extends KryoInstantiator {
     catch(ClassNotFoundException x) { throw new ConfigurationException(x); }
     catch(InstantiationException x) { throw new ConfigurationException(x); }
     catch(IllegalAccessException x) { throw new ConfigurationException(x); }
+    catch(NoSuchMethodException x) { throw new ConfigurationException(x); }
+    catch(java.lang.reflect.InvocationTargetException x) { throw new ConfigurationException(x); }
   }
 
   /** Create an instance using the defaults for non-listed params */
@@ -109,10 +111,11 @@ public class ReflectingInstantiator extends KryoInstantiator {
     conf.set(DEFAULT_REGISTRATIONS, registrarsToString(defaultRegistrations));
   }
 
-  // This one adds expeption annotations that the interface does not have
-  protected Kryo newKryoWithEx() throws InstantiationException, IllegalAccessException {
-    Kryo k = kryoClass.newInstance();
-    k.setInstantiatorStrategy(instStratClass.newInstance());
+  // This one adds exception annotations that the interface does not have
+  protected Kryo newKryoWithEx() throws InstantiationException, IllegalAccessException,
+      NoSuchMethodException, java.lang.reflect.InvocationTargetException {
+    Kryo k = kryoClass.getDeclaredConstructor().newInstance();
+    k.setInstantiatorStrategy(instStratClass.getDeclaredConstructor().newInstance());
     k.setRegistrationRequired(regRequired);
     for(IKryoRegistrar kr: registrations) {
       kr.apply(k);
@@ -130,6 +133,8 @@ public class ReflectingInstantiator extends KryoInstantiator {
     }
     catch(InstantiationException x) { throw new RuntimeException(x); }
     catch(IllegalAccessException x) { throw new RuntimeException(x); }
+    catch(NoSuchMethodException x) { throw new RuntimeException(x); }
+    catch(java.lang.reflect.InvocationTargetException x) { throw new RuntimeException(x); }
   }
 
   /** All keys are prefixed with this string */

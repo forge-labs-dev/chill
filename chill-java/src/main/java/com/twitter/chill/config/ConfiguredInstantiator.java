@@ -100,8 +100,11 @@ public class ConfiguredInstantiator extends KryoInstantiator {
       try {
         return instClass.getConstructor(Config.class).newInstance(optConf);
       } catch (NoSuchMethodException ex3) {
-        return instClass.newInstance();
+        return instClass.getDeclaredConstructor().newInstance();
       }
+    }
+    catch(NoSuchMethodException x) {
+      throw new ConfigurationException(x);
     }
     catch(InstantiationException x) {
       throw new ConfigurationException(x);

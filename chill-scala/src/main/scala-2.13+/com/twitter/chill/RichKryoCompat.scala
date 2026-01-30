@@ -22,22 +22,22 @@ import scala.reflect._
 
 trait RichKryoCompat { self: RichKryo =>
 
-  def forTraversableSubclass[T, C <: Traversable[T]](
-      c: C with Traversable[T],
+  def forTraversableSubclass[T, C <: Iterable[T]](
+      c: C with Iterable[T],
       isImmutable: Boolean = true
   )(implicit mf: ClassTag[C], f: Factory[T, C]): Kryo = {
     k.addDefaultSerializer(mf.runtimeClass, new TraversableSerializer(isImmutable)(f))
     k
   }
 
-  def forTraversableClass[T, C <: Traversable[T]](
-      c: C with Traversable[T],
+  def forTraversableClass[T, C <: Iterable[T]](
+      c: C with Iterable[T],
       isImmutable: Boolean = true
   )(implicit mf: ClassTag[C], f: Factory[T, C]): Kryo =
     forClass(new TraversableSerializer(isImmutable)(f))
 
-  def forConcreteTraversableClass[T, C <: Traversable[T]](
-      c: C with Traversable[T],
+  def forConcreteTraversableClass[T, C <: Iterable[T]](
+      c: C with Iterable[T],
       isImmutable: Boolean = true
   )(implicit f: Factory[T, C]): Kryo = {
     // a ClassTag is not used here since its runtimeClass method does not return the concrete internal type

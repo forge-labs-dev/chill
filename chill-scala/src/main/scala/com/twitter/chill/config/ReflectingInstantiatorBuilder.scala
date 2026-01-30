@@ -22,7 +22,7 @@ import com.esotericsoftware.kryo.Kryo;
 import org.objenesis.strategy.InstantiatorStrategy;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * a builder for the ReflectingInstantiator use the copy(arg = value) to change values:

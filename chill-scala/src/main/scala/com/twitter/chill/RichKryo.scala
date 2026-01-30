@@ -63,8 +63,8 @@ class RichKryo(val k: Kryo) extends RichKryoCompat {
     k
   }
 
-  def registerClasses(klasses: TraversableOnce[Class[_]]): Kryo = {
-    klasses.foreach { (klass: Class[_]) =>
+  def registerClasses(klasses: IterableOnce[Class[_]]): Kryo = {
+    klasses.iterator.foreach { (klass: Class[_]) =>
       if (!alreadyRegistered(ClassTag(klass)))
         k.register(klass)
     }

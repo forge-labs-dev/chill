@@ -137,12 +137,13 @@ object Instantiators {
   // Go through the list and use the first that works
   def newOrElse[T](
       cls: Class[T],
-      it: TraversableOnce[Class[T] => Try[ObjectInstantiator[T]]],
+      it: IterableOnce[Class[T] => Try[ObjectInstantiator[T]]],
       elsefn: => ObjectInstantiator[T]
   ): ObjectInstantiator[T] =
     // Just go through and try each one,
-    it.flatMap(fn => fn(cls).toOption)
-      .find(_ => true) // first element in traversable once (no headOption defined.)
+    it.iterator
+      .flatMap(fn => fn(cls).toOption)
+      .find(_ => true) // first element in iterator (no headOption defined.)
       .getOrElse(elsefn)
 
   // Use call by name:
