@@ -87,7 +87,7 @@ object ClosureCleaner {
   @tailrec
   private def getOuterClassesFn(cls: Class[_], hierarchy: List[Class[_]] = Nil): List[Class[_]] =
     outerFieldOf(cls) match {
-      case None => hierarchy
+      case None    => hierarchy
       case Some(f) =>
         val next = f.getType
         getOuterClassesFn(next, next :: hierarchy)

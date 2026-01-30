@@ -67,7 +67,7 @@ class Externalizer[T] extends Externalizable with KryoSerializable {
    */
   def set(it: T): Unit =
     item match {
-      case Left(e) => e.set(it)
+      case Left(e)  => e.set(it)
       case Right(x) =>
         assert(x.isEmpty, "Tried to call .set on an already constructed Externalizer")
         item = Right(Some(it))
