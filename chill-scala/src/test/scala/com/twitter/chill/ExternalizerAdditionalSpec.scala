@@ -81,11 +81,16 @@ class ExternalizerAdditionalSpec extends AnyWordSpec with Matchers with BaseProp
       rtExt.get should be(List("a", "b", "c"))
     }
 
-    "handle nested maps" in {
-      val nested = Map("a" -> Map("inner" -> 1), "b" -> Map("inner" -> 2))
-      val ext = Externalizer(nested)
+    "handle complex objects with nested structures" in {
+      // Construct heterogeneous map with explicit type to avoid Scala 3 type inference issues
+      val complex: Map[String, Any] = Map[String, Any](
+        "list" -> List(1, 2, 3),
+        "set" -> Set("a", "b"),
+        "nested" -> Map("inner" -> 42)
+      )
+      val ext = Externalizer[Map[String, Any]](complex)
       val rtExt = rt(ext)
-      rtExt.get should be(nested)
+      rtExt.get should be(complex)
     }
 
     "handle Option types" in {
