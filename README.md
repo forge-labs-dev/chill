@@ -1,18 +1,16 @@
 ## Chill
 
-![build](https://github.com/twitter/chill/workflows/ci/badge.svg)
-[![Codecov branch](https://img.shields.io/codecov/c/github/twitter/chill/develop.svg?maxAge=3600)](https://codecov.io/github/twitter/chill)
-[![Latest version](https://index.scala-lang.org/twitter/chill/chill/latest.svg?color=orange)](https://index.scala-lang.org/twitter/chill/chill)
-[![Chat](https://badges.gitter.im/twitter/chill.svg)](https://gitter.im/twitter/chill?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+![build](https://github.com/forge-labs-dev/chill/workflows/ci/badge.svg)
+[![Codecov branch](https://img.shields.io/codecov/c/github/forge-labs-dev/chill/develop.svg?maxAge=3600)](https://codecov.io/github/forge-labs-dev/chill)
 
 Extensions for the [Kryo serialization library](https://github.com/EsotericSoftware/kryo) including
 serializers and a set of classes to ease configuration of Kryo in systems like Hadoop, Storm,
-Akka, etc.
+Pekko, etc.
 
 ### Requirements
 
 - **Java**: 17 or later
-- **Scala**: 2.12.x, 2.13.x, or 3.3.x (core modules only for Scala 3)
+- **Scala**: 2.13.x or 3.3.x (core modules only for Scala 3)
 
 ### Compatibility
 
@@ -53,10 +51,10 @@ The KryoPool is a thread-safe way to share Kryo instances and temporary output b
 
 ### Chill Config
 
-Hadoop, Storm, and Akka all use a configuration that is basically equivalent to a `Map[String,
+Hadoop, Storm, and Pekko all use a configuration that is basically equivalent to a `Map[String,
 String]`. The `com.twitter.chill.config` package makes it easy to build up `KryoInstantiator`
 instances given a Config instance, which is an abstract class acting as a thin wrapper over
-whatever configuration data the system, such as Hadoop, Storm or Akka, might give.
+whatever configuration data the system, such as Hadoop, Storm or Pekko, might give.
 
 To configure a KryoInstantiator use `ConfiguredInstantiator` with either reflection,
 which takes a class name and instantiates that KryoInstantiator, or an instance of KryoInstantiator
@@ -181,27 +179,19 @@ object is created.
 
 To learn more and find links to tutorials and information around the web, check out the [Chill Wiki](https://github.com/twitter/chill/wiki).
 
-The latest ScalaDocs are hosted on Chill's [Github Project Page](http://twitter.github.io/chill).
-
 ## Contact
 
-Discussion occurs primarily on the [Chill mailing list](https://groups.google.com/forum/#!forum/chill-user). Issues should be reported on the [GitHub issue tracker](https://github.com/twitter/chill/issues).
+Issues should be reported on the [GitHub issue tracker](https://github.com/forge-labs-dev/chill/issues).
 
-## Get Involved + Code of Conduct
+## Get Involved
 
 Pull requests and bug reports are always welcome!
 
-We use a lightweight form of project governance inspired by the one used by Apache projects.
-Please see [Contributing and Committership](https://github.com/twitter/analytics-infra-governance#contributing-and-committership) for our code of conduct and our pull request review process.
-The TL;DR is send us a pull request, iterate on the feedback + discussion, and get a +1 from a [Committer](COMMITTERS.md) in order to get your PR accepted.
-
-The current list of active committers (who can +1 a pull request) can be found here: [Committers](COMMITTERS.md)
-
-A list of contributors to the project can be found here: [Contributors](https://github.com/twitter/chill/graphs/contributors)
+A list of contributors to the project can be found here: [Contributors](https://github.com/forge-labs-dev/chill/graphs/contributors)
 
 ## Maven
 
-Chill modules are available on Maven Central. The current groupid and version for all modules is, respectively, `"com.twitter"` and `0.10.0`. Core modules are published for Scala `2.12`, `2.13`, and `3`. Modules with Scala 2.x-only dependencies are published for `2.12` and `2.13`. Search [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cchill) when in doubt.
+Chill modules are available on Maven Central. The current groupid and version for all modules is, respectively, `"com.twitter"` and `0.10.0`. Core modules are published for Scala `2.13` and `3`. Modules with Scala 2.x-only dependencies are published for `2.13` only. Search [search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Cchill) when in doubt.
 
 `chill-scala` is not published separately; to use it, reference `chill`. To add the dependency to your project using SBT:
 
