@@ -107,7 +107,6 @@ lazy val chillAll = Project(
     chillThrift,
     chillProtobuf,
     chillPekko,
-    chillAvro,
     chillAlgebird
   )
 
@@ -122,7 +121,7 @@ lazy val noPublishSettings = Seq(
 /**
  * This returns the youngest jar we released that is compatible with the current.
  */
-val unreleasedModules = Set[String]("pekko", "avro")
+val unreleasedModules = Set[String]("pekko")
 val javaOnly = Set[String]("storm", "java", "hadoop", "thrift", "protobuf")
 val binaryCompatVersion = "0.10.0"
 
@@ -265,17 +264,6 @@ lazy val chillProtobuf = module("protobuf")
     )
   )
   .dependsOn(chillJava)
-
-// Avro depends on bijection which only supports Scala 2.13
-lazy val chillAvro = module("avro")
-  .settings(
-    crossScalaVersions := Seq(scala213),
-    libraryDependencies ++= Seq(
-      "com.twitter" %% "bijection-avro" % bijectionVersion,
-      "junit" % "junit" % "4.13.2" % "test"
-    )
-  )
-  .dependsOn(chill, chillJava, chillBijection)
 
 // Algebird only supports Scala 2.13
 lazy val chillAlgebird = module("algebird")

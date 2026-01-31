@@ -42,11 +42,11 @@ sbt publishLocal
 
 ## Module Architecture
 
-Multi-module SBT build with 11 submodules:
+Multi-module SBT build with 10 submodules:
 
 - **chill-scala** (aliased as `chill/`) - Core Scala serializers for standard library types (tuples, collections, regex, enumerations)
 - **chill-java** - Java serializers and base infrastructure (KryoInstantiator, KryoPool, config system)
-- **chill-akka** - Akka actor serialization support
+- **chill-pekko** - Apache Pekko actor serialization support
 - **chill-hadoop** - Hadoop serialization integration
 - **chill-storm** - Apache Storm topology serialization
 - **chill-bijection** - Twitter Bijection library integration
@@ -54,7 +54,6 @@ Multi-module SBT build with 11 submodules:
 - **chill-scrooge** - Scrooge (Thrift code generation) support
 - **chill-thrift** - Apache Thrift support
 - **chill-protobuf** - Protocol Buffers support
-- **chill-avro** - Apache Avro integration
 
 Dependencies flow: specialized modules → chill-scala → chill-java
 

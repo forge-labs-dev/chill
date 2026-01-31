@@ -30,7 +30,7 @@ sbt:chill-all>  publishLocal # publish to local ivy repo.
 Chill has a set of subprojects: chill-java, chill-hadoop, chill-storm and chill-scala. Other than
 chill-scala, all these projects are written in Java so they are easy to use on any JVM platform.
 
-**Scala 3 support:** The core modules (`chill`, `chill-java`, `chill-hadoop`, `chill-storm`, `chill-thrift`, `chill-protobuf`, `chill-pekko`) support Scala 3. Modules depending on libraries without Scala 3 support (`chill-bijection`, `chill-algebird`, `chill-scrooge`, `chill-avro`) remain Scala 2.x only.
+**Scala 3 support:** The core modules (`chill`, `chill-java`, `chill-hadoop`, `chill-storm`, `chill-thrift`, `chill-protobuf`, `chill-pekko`) support Scala 3. Modules depending on libraries without Scala 3 support (`chill-bijection`, `chill-algebird`, `chill-scrooge`) remain Scala 2.x only.
 
 ## Chill-Java
 
