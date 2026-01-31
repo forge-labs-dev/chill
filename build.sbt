@@ -8,16 +8,6 @@ val scroogeVersion = "21.2.0"
 val asmVersion = "4.28"
 val protobufVersion = "3.25.5"
 
-def scalaVersionSpecificFolders(srcBaseDir: java.io.File, scalaVersion: String): List[File] =
-  CrossVersion.partialVersion(scalaVersion) match {
-    case Some((2, y)) if y >= 13 =>
-      new java.io.File(s"${srcBaseDir.getPath}-2.13+") :: Nil
-    case Some((3, _)) =>
-      // Scala 3 uses the same collection APIs as Scala 2.13
-      new java.io.File(s"${srcBaseDir.getPath}-2.13+") :: Nil
-    case _ => Nil
-  }
-
 val scala213 = "2.13.18"
 val scala3 = "3.3.7"
 val allScalaVersions = Seq(scala213, scala3)
@@ -72,19 +62,7 @@ val sharedSettings = Seq(
       <name>Sam Ritchie</name>
       <url>http://twitter.com/sritchie</url>
         </developer>
-      </developers>,
-  Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders(
-    (Compile / scalaSource).value,
-    scalaVersion.value
-  ),
-  Test / unmanagedSourceDirectories ++= scalaVersionSpecificFolders(
-    (Test / scalaSource).value,
-    scalaVersion.value
-  ),
-  Compile / unmanagedSourceDirectories ++= scalaVersionSpecificFolders(
-    (Compile / javaSource).value,
-    scalaVersion.value
-  )
+      </developers>
 )
 
 // Aggregated project

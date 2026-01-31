@@ -76,7 +76,7 @@ new ScalaKryoInstantiator()
 
 - **Scala versions**: 2.13.18, 3.3.7 (partial - core modules only for Scala 3)
 - **Java versions**: 17, 21, 25
-- Version-specific source directories: `src/main/scala-2.13+/` (shared with Scala 3)
+- All Scala code in standard `src/main/scala/` directories
 - Binary compatibility maintained with version 0.10.0 via MIMA
 
 ## Local Development Environment
