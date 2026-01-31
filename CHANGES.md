@@ -1,5 +1,40 @@
 # chill #
 
+### 0.11.0 (Unreleased) ###
+
+#### Breaking Changes
+* Drop Scala 2.12 support: https://github.com/forge-labs-dev/chill/pull/9
+* Remove chill-avro module (Spark has its own Avro serialization)
+* Remove custom Base64 class in favor of java.util.Base64: https://github.com/forge-labs-dev/chill/pull/11
+
+#### New Features & Improvements
+* Add Scala 3.3.7 LTS support (core modules)
+* Migrate from Akka to Apache Pekko: https://github.com/forge-labs-dev/chill/pull/6
+* Modernize chill-java for Java 17: https://github.com/forge-labs-dev/chill/pull/10
+  - Pattern matching for instanceof
+  - Records for immutable data classes
+  - Multi-catch exception blocks
+  - Diamond operator and var usage
+* Consolidate Scala version-specific source directories
+
+#### Dependency Updates
+* Update Scala 2.13 to 2.13.18
+* Update kryo-shaded to 4.0.3: https://github.com/forge-labs-dev/chill/pull/4
+* Upgrade xbean-asm7-shaded to xbean-asm9-shaded 4.28: https://github.com/forge-labs-dev/chill/pull/8
+* Update algebird to 0.13.10: https://github.com/forge-labs-dev/chill/pull/7
+* Update libthrift to 0.22.0
+* Update storm-core to 2.6.4: https://github.com/forge-labs-dev/chill/pull/4
+* Update protobuf-java to 3.25.5: https://github.com/forge-labs-dev/chill/pull/4
+* Update scalafmt to 3.10.5
+
+#### Build & Infrastructure
+* Target Java 17+ (minimum version)
+* Fix release-drafter permissions
+* Disable publish workflow temporarily
+* Update NOTICE file with current dependencies
+* Add tests to improve chill-scala coverage
+* Fix deprecation warnings
+
 ### 0.8.0 ###
 * Kryo 3.0.3 upgrade: https://github.com/twitter/chill/pull/245
 
